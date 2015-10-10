@@ -7,8 +7,8 @@ synopsis:            A Haskell library to scrape and crawl web-pages
 -- description:         
 license:             BSD3
 license-file:        LICENSE
-author:              Nishant Gupta
-maintainer:          nishant.gupta291995@google.com
+author:              Nishant Gupta, Ayush Agarwal
+maintainer:          nishant.gupta291995@google.com, agarwal.ayush9@gmail.com
 -- copyright:           
 category:            Web
 build-type:          Simple

@@ -1,5 +1,6 @@
 --All types should be declared here.
 --TODO : XPath
+module Types where
 import qualified Data.Text as T
 
 data NodeType = Text T.Text
@@ -7,11 +8,18 @@ data NodeType = Text T.Text
               deriving (Show)
 
 data NTree a = NTree a [NTree a]
+             | NullTree
              deriving (Show)
 
-type AttrList = [(String , String)]
+type AttrList = [(T.Text , T.Text)]
 
 data ElementData = ElementData T.Text AttrList
                  deriving (Show)
 
 type HTMLTree = NTree NodeType
+
+toLeaf::T.Text -> HTMLTree
+toLeaf t = NTree (Text t) []
+
+toTree::T.Text -> AttrList -> [HTMLTree] -> HTMLTree
+toTree t l tree = NTree (Element (ElementData t l)) tree
