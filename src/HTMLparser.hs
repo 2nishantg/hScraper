@@ -11,7 +11,7 @@ import Text.Parsec.Text
 import Types
 
 parseHtml :: T.Text -> Either ParseError HTMLTree
-parseHtml s = case parse parseNodes "" s of
+parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
                 Left err -> Left err
                 Right nodes -> Right $
                   if length nodes == 1
