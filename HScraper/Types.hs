@@ -1,6 +1,6 @@
 --All types should be declared here.
 --TODO : XPath
-module Types where
+module HScraper.Types where
 import qualified Data.Text as T
 
 data NodeType = Text T.Text

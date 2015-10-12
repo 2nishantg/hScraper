@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings, NoMonomorphismRestriction, FlexibleContexts #-}
-module HTMLparser where
+module HScraper.HTMLparser where
 import Control.Monad (liftM, void)
-import Control.Applicative ((<*))
+--import Control.Applicative ((<*))
 
 import qualified Data.Text as T
 import Text.Parsec
-import Text.Parsec.Text
+--import Text.Parsec.Text
 
 
-import Types
+import HScraper.Types
 
 parseHtml :: T.Text -> Either ParseError HTMLTree
 parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
@@ -16,7 +16,7 @@ parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
                 Right nodes -> Right $
                   if length nodes == 1
                      then head nodes
-                     else Types.toTree "html" [] nodes
+                     else toTree "html" [] nodes
 
 parseNodes = spaces >> manyTill parseNode last
   where
@@ -24,7 +24,7 @@ parseNodes = spaces >> manyTill parseNode last
 
 parseNode = parseElement <|> parseText
 
-parseText = liftM (Types.toLeaf . T.pack) $ many (noneOf "<")
+parseText = liftM (toLeaf . T.pack) $ many (noneOf "<")
 
 parseElement = do
   -- opening tag
@@ -33,7 +33,7 @@ parseElement = do
   children <- parseNodes
   -- closing tag
   string $ tag ++ ">" -- "</" is consumed by parseNodes, maybe bad form?
-  return $ Types.toTree (T.pack tag) attrs children
+  return $ toTree (T.pack tag) attrs children
 
 tagData = do
   t <- tagName
