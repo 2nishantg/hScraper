@@ -1,11 +1,9 @@
 {-# LANGUAGE OverloadedStrings, NoMonomorphismRestriction, FlexibleContexts #-}
 module HScraper.HTMLparser where
 import Control.Monad (liftM, void)
---import Control.Applicative ((<*))
-
 import qualified Data.Text as T
 import Text.Parsec
---import Text.Parsec.Text
+
 
 
 import HScraper.Types
