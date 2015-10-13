@@ -19,19 +19,19 @@ data ElementData = ElementData T.Text AttrList
 type HTMLTree = NTree NodeType
 
 instance Eq ElementData where
-  (ElementData x y)==(ElementData p q) = (x==p) && (y==q)
+  (ElementData x y) == (ElementData p q) = (x==p) && (y==q)
 
 instance Eq NodeType where
-  (Text x) == (Text y) = x==y
-  (Element x) == (Element y) = (x==y)
-  _==_ = False
+  (Text x)    == (Text y)    = x==y
+  (Element x) == (Element y) = x==y
+  _ == _                     = False
 
-instance (Eq a)=>Eq (NTree a) where
-  (NTree x y)==(NTree p q) = (x==p)&&(y==q)
-  _==_ = False
+instance (Eq a) => Eq (NTree a) where
+  (NTree x y) == (NTree p q) = (x==p)&&(y==q)
+  _ == _                     = False
 
 toLeaf::T.Text -> HTMLTree
 toLeaf t = NTree (Text t) []
 
 toTree::T.Text -> AttrList -> [HTMLTree] -> HTMLTree
-toTree t l tree = NTree (Element (ElementData t l)) tree
+toTree t l = NTree (Element (ElementData t l))

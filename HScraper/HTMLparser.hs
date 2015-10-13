@@ -15,25 +15,39 @@ parseHtml :: T.Text -> Either ParseError HTMLTree
 parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
                 Left err -> Left err
                 Right nodes -> Right $
-                  if length nodes == 1
+                 if length nodes == 1
                      then head nodes
-                     else toTree "html" [] nodes
+                     else case filter filterHelper nodes of
+                            [] -> toTree "html" [] nodes
+                            x  -> head x
 
-parseNodes = spaces >> manyTill parseNode last
+filterHelper::HTMLTree -> Bool
+filterHelper (NTree x y) = case x of
+                            Element p -> case p of
+                                           ElementData x y -> x=="html"
+                                           -- _               -> False
+                            _         -> False
+
+comments = do
+  spaces
+  string "<!"
+  manyTill anyChar (char '>')
+  return ()
+
+parseNodes = do
+  void (try comments) <|> spaces
+  manyTill parseNode last
   where
     last = eof <|> void (try (string "</"))
 
 parseNode = parseElement <|> parseText
 
-parseText = liftM (toLeaf . T.pack) $ many (noneOf "<")
+parseText = fmap (toLeaf . T.pack) $ many (noneOf "<")
 
 parseElement = do
-  -- opening tag
   (tag, attrs) <- between (char '<') (char '>') tagData
-  -- contents
   children <- parseNodes
-  -- closing tag
-  string $ tag ++ ">" -- "</" is consumed by parseNodes, maybe bad form?
+  string $ tag ++ ">"
   return $ toTree (T.pack tag) attrs $nub children
 
 tagData = do
@@ -45,7 +59,7 @@ tagName = many1 alphaNum
 
 attributes =  spaces >> many (traillingSpaces attribute)
 
-traillingSpaces a = a <* spaces
+traillingSpaces = (<* spaces)
 
 attribute = do
   name <- tagName
