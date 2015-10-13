@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings, NoMonomorphismRestriction, FlexibleContexts #-}
 module HScraper.HTMLparser where
 import Control.Monad (liftM, void)
+import Control.Applicative ((<*))
+
+import Data.List (nub)
 import qualified Data.Text as T
 import Text.Parsec
 
@@ -31,7 +34,7 @@ parseElement = do
   children <- parseNodes
   -- closing tag
   string $ tag ++ ">" -- "</" is consumed by parseNodes, maybe bad form?
-  return $ toTree (T.pack tag) attrs children
+  return $ toTree (T.pack tag) attrs $nub children
 
 tagData = do
   t <- tagName
