@@ -1,7 +1,9 @@
 {-# LANGUAGE OverloadedStrings, NoMonomorphismRestriction, FlexibleContexts #-}
-module HScraper.HTMLparser where
-import Control.Monad (liftM, void)
-import Control.Applicative ((<*))
+module HScraper.HTMLparser (
+  parseHtml
+  ) where
+import Control.Monad (void)
+
 
 import Data.List (nub)
 import qualified Data.Text as T
@@ -22,48 +24,55 @@ parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
                             x  -> head x
 
 filterHelper::HTMLTree -> Bool
-filterHelper (NTree x y) = case x of
-                            Element p -> case p of
-                                           ElementData x y -> x=="html"
-                                           -- _               -> False
-                            _         -> False
+filterHelper (NTree (Element (ElementData x _)) _ ) | x == "html" = True
+filterHelper _ = False
 
+comments :: Stream s m Char => ParsecT s u m ()
 comments = do
   spaces
-  string "<!"
-  manyTill anyChar (char '>')
+  _ <- string "<!--"
+  _ <- manyTill anyChar (string "-->")
   return ()
 
+parseNodes :: Stream s m Char => ParsecT s u m [HTMLTree]
 parseNodes = do
   void (try comments) <|> spaces
-  manyTill parseNode last
+  manyTill parseNode last'
   where
-    last = eof <|> void (try (string "</"))
+    last' = eof <|> void (try (string "</"))
 
+parseNode :: Stream s m Char => ParsecT s u m HTMLTree
 parseNode = parseElement <|> parseText
 
-parseText = fmap (toLeaf . T.pack) $ many (noneOf "<")
+parseText :: Stream s m Char => ParsecT s u m HTMLTree
+parseText =  (toLeaf . T.pack) <$> many (noneOf "<")
 
+parseElement :: Stream s m Char => ParsecT s u m HTMLTree
 parseElement = do
   (tag, attrs) <- between (char '<') (char '>') tagData
   children <- parseNodes
-  string $ tag ++ ">"
+  _ <- string $ tag ++ ">"
   return $ toTree (T.pack tag) attrs $nub children
 
+tagData :: Stream s m Char => ParsecT s u m (String, [(T.Text, T.Text)])
 tagData = do
   t <- tagName
   attrs <- attributes
   return (t,attrs)
 
+tagName :: Stream s m Char => ParsecT s u m String
 tagName = many1 alphaNum
 
-attributes =  spaces >> many (traillingSpaces attribute)
+attributes :: Stream s m Char => ParsecT s u m [(T.Text, T.Text)]
+attributes =  spaces >> many (trailingSpaces attribute)
 
-traillingSpaces = (<* spaces)
+trailingSpaces :: Stream s m Char => ParsecT s u m a -> ParsecT s u m a
+trailingSpaces = (<* spaces)
 
+attribute :: Stream s m Char => ParsecT s u m (T.Text, T.Text)
 attribute = do
   name <- tagName
-  char '='
+  _ <- char '='
   open <- char '\"' <|> char '\''
   value <- manyTill anyChar (try $ char open)
   return (T.pack name, T.pack value)

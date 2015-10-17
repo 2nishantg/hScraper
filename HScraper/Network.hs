@@ -74,3 +74,4 @@ fetchPOSTRequest url list  = do
   manager <- newManager tlsManagerSettings
   res <- httpLbs req manager
   return $  decodeUtf8 . B.concat . BL.toChunks $ responseBody res
+
