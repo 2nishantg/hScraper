@@ -35,3 +35,13 @@ toLeaf t = NTree (Text t) []
 
 toTree::T.Text -> AttrList -> [HTMLTree] -> HTMLTree
 toTree t l = NTree (Element (ElementData t l))
+
+type Name = T.Text
+
+type Class = Maybe T.Text
+
+type ID = Maybe T.Text
+
+data NodeQuery = NodeQuery Name Class ID deriving (Show, Read)
+
+data Query = Query [NodeQuery] deriving (Show, Read)

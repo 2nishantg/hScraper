@@ -23,7 +23,7 @@ parseHtml s = case parse parseNodes "" (T.unwords (T.words s)) of
                             [] -> toTree "html" [] nodes
                             x  -> head x
 
-filterHelper::HTMLTree -> Bool
+filterHelper :: HTMLTree -> Bool
 filterHelper (NTree (Element (ElementData x _)) _ ) | x == "html" = True
 filterHelper _ = False
 
