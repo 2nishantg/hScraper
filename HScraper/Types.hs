@@ -4,7 +4,7 @@ module HScraper.Types where
 import qualified Data.Text as T
 
 data NodeType = Text T.Text
-              | Element ElementData
+              | Element T.Text AttrList
               deriving (Show)
 
 data NTree a = NTree a [NTree a]
@@ -13,17 +13,11 @@ data NTree a = NTree a [NTree a]
 
 type AttrList = [(T.Text , T.Text)]
 
-data ElementData = ElementData T.Text AttrList
-                 deriving (Show)
-
 type HTMLTree = NTree NodeType
 
-instance Eq ElementData where
-  (ElementData x y) == (ElementData p q) = (x==p) && (y==q)
-
 instance Eq NodeType where
-  (Text x)    == (Text y)    = x==y
-  (Element x) == (Element y) = x==y
+  (Text x)    == (Text y)    = x == y
+  (Element x y) == (Element p q) = x == p && y == q
   _ == _                     = False
 
 instance (Eq a) => Eq (NTree a) where
@@ -34,7 +28,7 @@ toLeaf::T.Text -> HTMLTree
 toLeaf t = NTree (Text t) []
 
 toTree::T.Text -> AttrList -> [HTMLTree] -> HTMLTree
-toTree t l = NTree (Element (ElementData t l))
+toTree t l = NTree (Element t l)
 
 type Name = T.Text
 

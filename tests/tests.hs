@@ -1,4 +1,6 @@
 import HScraper.HTMLparser
+import HScraper.Query
+import HScraper.Types
 import qualified Data.Text as T
 
 simpleComment = print $parseHtml (T.pack "<!-- hey you -->")
@@ -72,8 +74,8 @@ testHtmlWithComment =  Prelude.unlines[ "<html>",
 
 
 
-main = print $parseHtml (T.pack test_html)
+main = print $ parseHtml (T.pack test_html)
 
-testComment = print $parseHtml (T.pack testHtmlWithComment)
+testComment = print $ parseHtml (T.pack testHtmlWithComment)
 
-bigPage = print $parseHtml (T.pack complicated)
+bigPage = print $ parseHtml (T.pack complicated)

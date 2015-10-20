@@ -27,7 +27,7 @@ parseHtml s = case parse baseParser "" (T.unwords (T.words s)) of
 baseParser = docType <|> parseNodes
 
 filterHelper :: HTMLTree -> Bool
-filterHelper (NTree (Element (ElementData x _)) _ ) | x == "html" = True
+filterHelper (NTree (Element x _) _ ) | x == "html" = True
 filterHelper _ = False
 
 oneLiners = (toLeaf . T.pack) <$> do
@@ -53,20 +53,18 @@ comments = (toLeaf . T.pack) <$> do
   return ""
 
 parseNodes :: Stream s m Char => ParsecT s u m [HTMLTree]
-parseNodes = do
-  manyTill parseNode last'
+parseNodes = manyTill parseNode last'
   where
     last' = eof <|> void (try (string "</"))
 
 parseNode :: Stream s m Char => ParsecT s u m HTMLTree
-parseNode =  (try oneLiners) <|> (try comments) <|> parseElement <|> parseText
+parseNode =  try oneLiners <|> try comments <|> parseElement <|> parseText
 
 parseText :: Stream s m Char => ParsecT s u m HTMLTree
-parseText =  (toLeaf . T.pack) <$>
-          do
-            _ <- spaces
-            a <-many (noneOf "<")
-            return a
+parseText =  (toLeaf . T.pack) <$>do
+  _ <- spaces
+  many (noneOf "<")
+
 
 parseElement :: Stream s m Char => ParsecT s u m HTMLTree
 parseElement = do

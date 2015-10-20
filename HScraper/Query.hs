@@ -1,5 +1,6 @@
 module HScraper.Query (
   parseQuery,
+  (~=~),
   (<=>),
   (>=>)
   ) where
@@ -16,7 +17,7 @@ Nothing === Just _ = False
 
 (~=~) :: NodeQuery -> NodeType -> Bool
 NodeQuery{} ~=~ Text _ = False
-NodeQuery name cls idd ~=~ Element (ElementData nm xs) = (name == nm)
+NodeQuery name cls idd ~=~ Element nm xs = (name == nm)
                                                          && (lookup (T.pack "class") xs === cls)
                                                          && (lookup (T.pack "id") xs === idd)
 
