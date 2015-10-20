@@ -14,7 +14,7 @@ import HScraper.Types
 parseQuery :: String -> Either ParseError Query
 parseQuery s = case parse parseNodeQueries "" (unwords (words s)) of
   Left err -> Left err
-  Right nodes -> Right $ Query nodes
+  Right nodes -> Right nodes
 
 
 parseNodeQueries :: Stream s m Char => ParsecT s u m [NodeQuery]

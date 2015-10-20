@@ -16,11 +16,12 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
-   exposed-modules:     
-                      HScraper.HTMLparser
-                      HScraper.Network
-   other-modules:
-                      HScraper.Types
+   exposed-modules: HScraper.HTMLparser
+                  , HScraper.Network
+                  , HScraper.Query
+
+   other-modules: HScraper.Types
+                , HScraper.QueryParser
 -- other-extensions:
   build-depends:       base >=4.8 && <4.9
                      , http-types

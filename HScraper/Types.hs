@@ -44,4 +44,4 @@ type ID = Maybe T.Text
 
 data NodeQuery = NodeQuery Name Class ID deriving (Show, Read)
 
-data Query = Query [NodeQuery] deriving (Show, Read)
+type Query = [NodeQuery]
