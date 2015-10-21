@@ -33,7 +33,7 @@ filterHelper _ = False
 oneLiners = (toLeaf . T.pack) <$> do
   _ <- spaces
   _ <- char '<'
-  _ <- manyTill (noneOf ">") $string "/>"
+  _ <- manyTill (noneOf ">") (try $string "/>")
   return ""
 
 docType = do
@@ -65,13 +65,18 @@ parseText =  (toLeaf . T.pack) <$>do
   _ <- spaces
   many (noneOf "<")
 
+exceptionList = ["link","br"]
 
 parseElement :: Stream s m Char => ParsecT s u m HTMLTree
 parseElement = do
   (tag, attrs) <- between (char '<') (char '>') tagData
-  children <- parseNodes
-  _ <- string $ tag ++ ">"
-  return $ toTree (T.pack tag) attrs $nub children
+  if tag `elem` exceptionList then
+    return $ toTree (T.pack tag) attrs []
+  else
+    do
+      children <- parseNodes
+      _ <- string $ tag ++ ">"
+      return $ toTree (T.pack tag) attrs $nub children
 
 tagData :: Stream s m Char => ParsecT s u m (String, [(T.Text, T.Text)])
 tagData = do
@@ -83,7 +88,7 @@ tagName :: Stream s m Char => ParsecT s u m String
 tagName = many1 alphaNum
 
 attributes :: Stream s m Char => ParsecT s u m [(T.Text, T.Text)]
-attributes =  spaces >> many (trailingSpaces attribute)
+attributes =  spaces >> many (trailingSpaces (try attribute <|> attribute'))
 
 trailingSpaces :: Stream s m Char => ParsecT s u m a -> ParsecT s u m a
 trailingSpaces = (<* spaces)
@@ -94,5 +99,12 @@ attribute = do
   _ <- char '='
   open <- char '\"' <|> char '\''
   value <- manyTill anyChar (try $ char open)
+  return (T.pack name, T.pack value)
+
+attribute' :: Stream s m Char => ParsecT s u m (T.Text, T.Text)
+attribute' = do
+  name <- tagName
+  _ <- char '='
+  value <- many (noneOf "> ")
   return (T.pack name, T.pack value)
 
