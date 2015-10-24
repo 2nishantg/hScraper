@@ -105,7 +105,9 @@ attribute = do
 attribute' :: Stream s m Char => ParsecT s u m (T.Text, T.Text)
 attribute' = do
   name <- tagName
+  spaces
   _ <- char '='
+  spaces
   value <- many (noneOf "> ")
   return (T.pack name, T.pack value)
 
