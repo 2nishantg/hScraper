@@ -3,18 +3,21 @@ import HScraper.Query
 import HScraper.Types
 import qualified Data.Text as T
 
-simpleComment = print $parseHtml (T.pack "<!-- hey you -->")
+simpleComment = print $parseHtml (T.pack "<script> hey you  <!-- this is comment --> script <<<@#$@!#%@%#@%%@%!@#%&*&*^&&^(&^<>?\":\' </hey> </script> <script> /// \"\"</script> ")
 
 test_html =  Prelude.unlines["<!Doctype html>",
                   "<html>",
                   "<test rel=\"fdfdbf\" />",
-                  "<!-- hey you -->",
-                  "<head>",
+                  "<!-- hey you --></br>",
+                  "<head class = \"row adf\">",
                   "<link size = 2 link=\"www.google.com/abc/bca\">",
+                   "<link rel=\"assets\" href=\"https://assets-cdn.github.com/ \">",
+                   "<link rel=\"assets\" href=\"https://assets-cdn.github.com/\"/>",
                       " <metadata> Test </metadata>",
                   "<!-- hey you -->",
                       "<my name is khan/>",
-                  " </head>",
+                   ".&nbsp;<link rel=\"assets\" href=\"https://assets-cdn.github.com/\">",
+                  " </head>.&nbsp;",
                   " <body>",
                     "<p class = \"testing\">",
                     "<br>",

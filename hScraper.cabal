@@ -29,6 +29,7 @@ library
                      , bytestring
                      , parsec
                      , transformers
+                     , regex-compat
                      , http-conduit
                      , HTTP
                                
