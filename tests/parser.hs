@@ -8,5 +8,5 @@ main = parseSite "http://home.iitk.ac.in/~nishgu/"
 parseSite :: String ->  IO ()
 parseSite url  = do
   str <- fetchResponse url
-  print str
+  -- print str
   print $  parseHtml str

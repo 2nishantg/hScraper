@@ -41,11 +41,11 @@ docType = do
   try docTypeHandler
   parseNodes
 
-docTypeHandler = do
+docTypeHandler = (toLeaf . T.pack) <$> do
   _ <- spaces
   _ <- string "<!"
   _ <- manyTill anyChar (char '>')
-  return ()
+  return ""
 
 comments = (toLeaf . T.pack) <$> do
   _ <- spaces
@@ -59,25 +59,44 @@ parseNodes = manyTill parseNode last'
     last' = eof <|> void (try (string "</"))
 
 parseNode :: Stream s m Char => ParsecT s u m HTMLTree
-parseNode =  try oneLiners <|> try comments <|> parseElement <|> parseText
+parseNode =  try oneLiners <|> try comments <|> try docTypeHandler<|> parseElement <|> parseText
 
 parseText :: Stream s m Char => ParsecT s u m HTMLTree
 parseText =  (toLeaf . T.pack) <$>do
   _ <- spaces
   many (noneOf "<")
 
+exceptionList :: [String]
 exceptionList = ["link","br", "img"]
 
 parseElement :: Stream s m Char => ParsecT s u m HTMLTree
 parseElement = do
   (tag, attrs) <- between (char '<') (char '>') tagData
-  if (map toLower tag) `elem` exceptionList then
+  tempTag tag attrs
+
+tempTag :: Stream s m Char => String -> [(T.Text, T.Text)] -> ParsecT s u m HTMLTree
+tempTag tag attrs
+  | map toLower tag `elem` exceptionList = return $ toTree (T.pack tag) attrs []
+  | map toLower tag == "style" = do
+    _ <- manyTill anyChar (try $string "</style>")
     return $ toTree (T.pack tag) attrs []
-  else
-    do
-      children <- parseNodes
-      _ <- string $ tag ++ ">"
-      return $ toTree (T.pack tag) attrs $nub children
+  | otherwise = do
+    children <- parseNodes
+    _ <- string $ tag ++ ">"
+    return $ toTree (T.pack tag) attrs $nub children
+
+  -- then
+  --     return $ toTree (T.pack tag) attrs []
+  -- else if (toLower tag) == "style"
+  -- then
+  --       do
+  --         _ <- manyTill anyChar (try $string "</style>")
+  --       return $ toTree (T.pack tag) attrs []
+  -- else
+  --       do
+  --         children <- parseNodes
+  --         _ <- string $ tag ++ ">"
+  --         return $ toTree (T.pack tag) attrs $nub children
 
 tagData :: Stream s m Char => ParsecT s u m (String, [(T.Text, T.Text)])
 tagData = do
@@ -86,7 +105,7 @@ tagData = do
   return (t,attrs)
 
 tagName :: Stream s m Char => ParsecT s u m String
-tagName = many1 alphaNum
+tagName = many1 (alphaNum <|> char ':')
 
 attributes :: Stream s m Char => ParsecT s u m [(T.Text, T.Text)]
 attributes =  spaces >> many (trailingSpaces (try attribute <|> attribute'))
