@@ -6,6 +6,7 @@ import Control.Monad (void)
 
 
 import Data.List (nub)
+import Data.Char
 import qualified Data.Text as T
 import Text.Parsec
 
@@ -65,12 +66,12 @@ parseText =  (toLeaf . T.pack) <$>do
   _ <- spaces
   many (noneOf "<")
 
-exceptionList = ["link","br"]
+exceptionList = ["link","br", "img"]
 
 parseElement :: Stream s m Char => ParsecT s u m HTMLTree
 parseElement = do
   (tag, attrs) <- between (char '<') (char '>') tagData
-  if tag `elem` exceptionList then
+  if (map toLower tag) `elem` exceptionList then
     return $ toTree (T.pack tag) attrs []
   else
     do
