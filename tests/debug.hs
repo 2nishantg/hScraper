@@ -1,5 +1,5 @@
 import System.IO
-
+import HScraper.HTMLparser
 
 main = putStrLn "Hi"
 

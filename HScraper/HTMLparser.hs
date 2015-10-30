@@ -77,7 +77,7 @@ parseText =  (toLeaf . T.pack) <$>do
   many (noneOf "<")
 
 exceptionList :: [String]
-exceptionList = ["link", "br", "img", "meta", "hr"]
+exceptionList = ["link", "br", "img", "meta", "hr", "input"]
 
 endList = ["br>"]
 
@@ -110,7 +110,7 @@ tagName :: Stream s m Char => ParsecT s u m String
 tagName = many1 (try (char ':') <|> try (char '-') <|> try (char '_') <|> try (char '.') <|> try (char ';') <|> alphaNum)
 
 attributes :: Stream s m Char => ParsecT s u m [(T.Text, T.Text)]
-attributes =  spaces >> many (trailingSpaces (try attribute <|> attribute'))
+attributes =  spaces >> many (trailingSpaces (try attribute <|> try attribute' <|> try simpleTextInsideTag))
 
 trailingSpaces :: Stream s m Char => ParsecT s u m a -> ParsecT s u m a
 trailingSpaces = (<* spaces)
@@ -135,3 +135,7 @@ attribute' = do
   value <- many (noneOf "> ")
   return (T.pack name, T.pack value)
 
+simpleTextInsideTag = do
+  a <- many1 alphaNum
+  spaces
+  return (T.pack a, T.pack "")
