@@ -9,13 +9,12 @@ import Data.List (nub)
 import Data.Char
 import qualified Data.Text as T
 import Text.Parsec
-import Text.Regex
 
 
 import HScraper.Types
 
 parseHtml :: T.Text -> Either ParseError HTMLTree
-parseHtml s = case parse baseParser "" (T.unwords (T.words $T.pack $subRegex (mkRegex "</br>|<br />") (T.unpack s) "")) of
+parseHtml s = case parse baseParser "" (T.unwords (T.words s)) of
                 Left err -> Left err
                 Right nodes -> Right $
                  if length nodes == 1

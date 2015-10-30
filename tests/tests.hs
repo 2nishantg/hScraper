@@ -8,7 +8,7 @@ simpleComment = print $parseHtml (T.pack "<script> hey you  <!-- this is comment
 test_html =  Prelude.unlines["<!Doctype html>",
                   "<html>",
                   "<test rel=\"fdfdbf\" />",
-                  "<!-- hey you --></br>",
+                  "<!-- hey you --><br/>",
                   "<head class = \"row adf\">",
                   "<link size = 2 link=\"www.google.com/abc/bca\">",
                    "<link rel=\"assets\" href=\"https://assets-cdn.github.com/ \">",
