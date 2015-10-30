@@ -30,8 +30,8 @@ library
                      , parsec
                      , transformers
                      , regex-compat
-                     , http-conduit
                      , HTTP
+                     , http-conduit
                                
 --  hs-source-dirs: HScraper, tests
   default-language:    Haskell2010
