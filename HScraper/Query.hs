@@ -18,8 +18,8 @@ Nothing === Just _ = False
 (~=~) :: NodeQuery -> NodeType -> Bool
 NodeQuery{} ~=~ Text _ = False
 NodeQuery name cls idd ~=~ Element nm xs = (name == nm)
-                                                         && (lookup (T.pack "class") xs === cls)
-                                                         && (lookup (T.pack "id") xs === idd)
+                                           && (lookup (T.pack "class") xs === cls)
+                                           && (lookup (T.pack "id") xs === idd)
 
 -- | Returns the list of nodes matching the query
 -- with root matching the first NodeQuery, and subsequent
@@ -35,7 +35,7 @@ NTree a xs >=> (q:qs)
   | otherwise = []
   where g acc l = acc `mappend` (l >=> qs)
 
--- | Applies @(>=>) considering each node as root and
+-- | Applies '(>=>)' considering each node as root and
 -- combines the result.
 (<=>) :: HTMLTree -> Query -> [HTMLTree]
 NullTree <=> _ = []
