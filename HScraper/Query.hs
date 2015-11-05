@@ -1,8 +1,9 @@
 module HScraper.Query (
   parseQuery,
   (~=~),
-  (<=>),
-  (>=>)
+  (|>>),
+  (>=>),
+  getText
   ) where
 
 import qualified Data.Text as T
@@ -37,6 +38,6 @@ NTree a xs >=> (q:qs)
 
 -- | Applies '(>=>)' considering each node as root and
 -- combines the result.
-(<=>) :: HTMLTree -> Query -> [HTMLTree]
-NullTree <=> _ = []
-nt@(NTree _ xs) <=> q = foldl (\x y -> (y <=> q) `mappend` x) (nt >=> q) xs
+(|>>) :: HTMLTree -> Query -> [HTMLTree]
+NullTree |>> _ = []
+nt@(NTree _ xs) |>> q = foldl (\x y -> (y |>> q) `mappend` x) (nt >=> q) xs
