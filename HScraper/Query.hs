@@ -41,3 +41,21 @@ NTree a xs >=> (q:qs)
 (|>>) :: HTMLTree -> Query -> [HTMLTree]
 NullTree |>> _ = []
 nt@(NTree _ xs) |>> q = foldl (\x y -> (y |>> q) `mappend` x) (nt >=> q) xs
+
+getText :: HTMLTree -> T.Text
+getText NullTree = T.empty
+getText nt@(NTree _ xs ) = foldl f (g nt) xs
+  where
+    f acc x = g x `T.append` acc
+    g (NTree (Text x) _) = x
+    g _ = T.empty
+
+getEntireText :: HTMLTree -> T.Text
+getEntireText NullTree = T.empty
+getEntireText (NTree (Text x) _) = x
+getEntireText (NTree (Element _ _) xs) = foldl fn T.empty  xs
+  where
+    fn acc x = gn x `T.append` acc
+    gn NullTree = T.empty
+    gn (NTree (Text x) _) = x
+    gn ntm@(NTree (Element _ _) _) = getEntireText ntm
