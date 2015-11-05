@@ -36,7 +36,7 @@ idd = do
 
 node :: Stream s m Char => ParsecT s u m NodeQuery
 node = do
-  name <-many (noneOf "{[>")
+  name <-many (noneOf " {[>")
   cls <- optionMaybe clas
   ids <- optionMaybe idd
   return (NodeQuery (T.pack name) (fmap T.pack cls) (fmap T.pack ids))

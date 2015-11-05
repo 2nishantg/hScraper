@@ -23,7 +23,7 @@ NodeQuery name cls idd ~=~ Element nm xs = (name == nm)
 
 -- | Returns the list of nodes matching the query
 -- with root matching the first NodeQuery, and subsequent
--- Children satisfying subsequent NodeQueries continously.
+-- Children satisfying subsequent 'NodeQueries' continously.
 (>=>) :: HTMLTree -> Query -> [HTMLTree]
 NullTree >=>  _ = []
 nt >=> [] = [nt]
