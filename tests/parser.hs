@@ -2,6 +2,7 @@ import HScraper.HTMLparser
 import HScraper.Network
 import HScraper.Query
 import HScraper.Tidy
+import HScraper.Types
 import Data.Text as T
 
 main :: IO ()
@@ -19,3 +20,4 @@ parseSiteWithoutPrinting :: String ->  IO ()
 parseSiteWithoutPrinting url  = do
   str <- tidy =<< fetchResponse url
   print $  parseHtml str
+
