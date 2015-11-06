@@ -19,7 +19,7 @@ import Data.ByteString.Char8 (pack)
 import qualified Data.ByteString as B
 import Data.Text.Encoding
 import qualified Data.Text as T
-
+import Control.Applicative((<$>))
 import Network.HTTP.Conduit
 import Network.HTTP.Types.Method
 import Network.HTTP.Types.Header

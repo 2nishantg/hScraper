@@ -4,11 +4,12 @@ module HScraper.Query (
   (|>>),
   (>=>),
   getText,
-  getEntireText
+  getEntireText,
+  getAttribute
   ) where
 
 import qualified Data.Text as T
-
+import Data.Monoid
 import HScraper.Types
 import HScraper.QueryParser
 
@@ -62,3 +63,5 @@ getEntireText (NTree (Element _ _) xs) = foldl fn T.empty  xs
     gn ntm@(NTree (Element _ _) _) = getEntireText ntm
 
 getAttribute :: HTMLTree -> String -> Maybe String
+getAttribute (NTree (Element _ xs ) _)  str = fmap T.unpack (lookup (T.pack str) xs)
+getAttribute _ _ = Nothing
