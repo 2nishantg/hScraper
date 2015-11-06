@@ -1,8 +1,9 @@
 module HScraper.Main (
   getFromFile,
   getParsedHTML,
-  getParsedQuery
-  )where
+  getParsedQuery,
+  parseSite
+  ) where
 
 import System.IO
 import HScraper.HTMLparser
@@ -40,3 +41,10 @@ getParsedQuery_ = either (const []) id
 -- returns empty query if parsing fails.
 getParsedQuery :: String -> Query
 getParsedQuery = getParsedQuery_ .  parseQuery
+
+parseSite :: String -> IO HTMLTree
+parseSite url  = do
+  str <- tidy =<< fetchResponse url
+  return $  getParsedHTML str
+
+

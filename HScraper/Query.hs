@@ -57,7 +57,7 @@ getEntireText NullTree = T.empty
 getEntireText (NTree (Text x) _) = x
 getEntireText (NTree (Element _ _) xs) = foldl fn T.empty  xs
   where
-    fn acc x = gn x `T.append` acc
+    fn acc x =  acc `T.append` gn x
     gn NullTree = T.empty
     gn (NTree (Text x) _) = x
     gn ntm@(NTree (Element _ _) _) = getEntireText ntm
