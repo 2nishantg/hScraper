@@ -3,7 +3,8 @@ module HScraper.Query (
   (~=~),
   (|>>),
   (>=>),
-  getText
+  getText,
+  getEntireText
   ) where
 
 import qualified Data.Text as T
