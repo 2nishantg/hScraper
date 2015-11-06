@@ -3,7 +3,7 @@ module HScraper.HTMLparser (
   parseHtml
   ) where
 import Control.Monad (void)
---import Control.Applicative((<$>))
+import Control.Applicative((<$>), (<*))
 
 import Data.List (nub)
 import Data.Char
