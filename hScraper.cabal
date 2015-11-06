@@ -27,7 +27,7 @@ library
    other-modules: HScraper.QueryParser
 
 -- other-extensions:
-  build-depends:       base >=4.8 && <4.9
+  build-depends:       base >=4.4 && <4.9
                      , http-types
                      , directory
                      , text

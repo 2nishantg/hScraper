@@ -60,3 +60,5 @@ getEntireText (NTree (Element _ _) xs) = foldl fn T.empty  xs
     gn NullTree = T.empty
     gn (NTree (Text x) _) = x
     gn ntm@(NTree (Element _ _) _) = getEntireText ntm
+
+getAttribute :: HTMLTree -> String -> Maybe String
