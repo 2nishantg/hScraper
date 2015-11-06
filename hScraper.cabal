@@ -20,9 +20,12 @@ library
                   , HScraper.Network
                   , HScraper.Query
                   , HScraper.Tidy
+                  , HScraper
+                  , HScraper.Types
+                  , HScraper.Main
 
-   other-modules: HScraper.Types
-                , HScraper.QueryParser
+   other-modules: HScraper.QueryParser
+
 -- other-extensions:
   build-depends:       base >=4.8 && <4.9
                      , http-types
