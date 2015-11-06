@@ -22,11 +22,14 @@ tempHTMLTree = getParsedHTML_ <$>  parseHtml <$> (tidy =<< fetchResponse "http:/
 getParsedHTML_ :: Either a HTMLTree -> HTMLTree
 getParsedHTML_ = either (const NullTree) id
 
+getParsedHTML :: T.Text -> HTMLTree
+getParsedHTML = getParsedHTML_ . parseHtml
+
 getParsedQuery_ :: Either a Query -> Query
 getParsedQuery_ = either (const []) id
 
 -- | Takes a 'String' and tries to parse as 'Query'
 -- returns empty query if fails.
 getParsedQuery :: String -> Query
-getParsedQuery str = getParsedQuery_  $ parseQuery str
+getParsedQuery = getParsedQuery_ .  parseQuery
 

@@ -1,89 +1,25 @@
-import HScraper.HTMLparser
-import HScraper.Query
-import HScraper.Types
-import qualified Data.Text as T
+import HScraper
 
-simpleComment = print $parseHtml (T.pack "<script> hey you  <!-- this is comment --> script <<<@#$@!#%@%#@%%@%!@#%&*&*^&&^(&^<>?\":\' </hey> </script> <script> /// \"\"</script> ")
+main :: IO ()
+main = runTests testUrlsList
 
-test_html =  Prelude.unlines["<!Doctype html>",
-                  "<html>",
-                  "<test rel=\"fdfdbf\" />",
-                  "<!-- hey you --><br/>",
-                  "<head class = \"row adf\">",
-                  "<link size = 2 link=\"www.google.com/abc/bca\">",
-                   "<link rel=\"assets\" href=\"https://assets-cdn.github.com/ \">",
-                   "<link rel=\"assets\" href=\"https://assets-cdn.github.com/\"/>",
-                      " <metadata> Test </metadata>",
-                  "<!-- hey you -->",
-                      "<my name is khan/>",
-                   ".&nbsp;<link rel=\"assets\" href=\"https://assets-cdn.github.com/\">",
-                  " </head>.&nbsp;",
-                  " <body>",
-                    "<p class = \"testing\">",
-                    "<br>",
-                    "<br>",
-                    "<!-- another comment -->",
-                    "testing class",
-                  "<!-- hey you -->",
-                  "<again one liner/>",
-                    "more text",
-                    "</p>",
-                    "<one liners/>",
-                    "<br>",
-                    "<p class=\"anotherClass\">",
-                       " Second class tested ",
-                    "</p>",
-                  " </body>",
-                  " </html>"]
+testUrlsList :: [String]
+testUrlsList = ["http://home.iitk.ac.in/~nishgu/"
+               ,"http://www.cse.iitk.ac.in/users/mainakc/"
+               ]
 
-complicated = Prelude.unlines["<html>",
-              "<head>",
-              "<style tags />",
-              "<STYLE type=\"text/css\">",
-              "<!--",
-              "A { text-decoration:none }",
-              "-->",
-              "</STYLE>",
-              " <title>Mainak Chaudhuri</title>",
-              "</head>",
-              "<body>",
-              "<TABLE BORDER='0'>",
-              "<TR>",
-              "<TD VALIGN='TOP' width=400 size=2>",
-              "<font size='2'><b>Mainak <!-- comments can be any where -->Chaudhuri</b></font>",
-              "Member of faculty",
-              " <a href=\"http://www.cse.iitk.ac.in\">Computer Science and Engineering</a>",
-              " <a href=\"http://www.iitk.ac.in\">Indian Institute of Technology, Kanpur</a> 208016",
-              "  India",
-              " </TD>",
-              "</TR>",
-              "</TABLE>",
-              "</body>",
-              "</html>"]
+runTests :: [String] -> IO ()
+runTests xs  = testPrint $ foldl ga [] xs
+  where ga acc el = (el, urlTest el) : acc
+
+urlTest :: String -> IO Bool
+urlTest url = (NullTree /=) <$> getParsedHTML <$> (tidy =<< fetchResponse url)
 
 
+testPrint :: [(String,IO Bool)] -> IO ()
+testPrint  = mapM_  printResult
 
-
-
-testHtmlWithComment =  Prelude.unlines[ "<html>",
-                  "<!-- my name is ayush-->",
-                  "<head>",
-                      " <metadata> Test </metadata>",
-                  " </head>",
-                  " <body>",
-                    "<p class=\"testing\">",
-                    "testing class",
-                    "</p>",
-                    "<p class=\"anotherClass\">",
-                       " Second class tested ",
-                    "</p>",
-                  " </body>",
-                  " </html>"]
-
-
-
-main = print $ parseHtml (T.pack test_html)
-
-testComment = print $ parseHtml (T.pack testHtmlWithComment)
-
-bigPage = print $ parseHtml (T.pack complicated)
+printResult :: (String,IO Bool) -> IO ()
+printResult (x, y) = putStr x >> y >>= g
+  where g True = putStrLn " Passed"
+        g False = putStrLn " Failed"
