@@ -16,6 +16,7 @@ import HScraper.Network
 import HScraper.Query
 import HScraper.Tidy
 import HScraper.Types
+import HScraper.Show
 
 import Control.Applicative
 import Data.Monoid
