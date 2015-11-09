@@ -6,4 +6,4 @@ Parses correct html by itself and has support for malformed html using either on
 - http://www.html-tidy.org/
 - http://tidy.sourceforge.net/
 
-See [Documentation](docs/) for more info.
+See [Documentation](https://hackage.haskell.org/package/hScraper-0.1.0.0) for more info.

@@ -1,5 +1,5 @@
 {- |
-Module for fetching different requests over network.
+Module for fetching different requests over network(Wrapper around http-conduit).
 -}
 
 module HScraper.Network

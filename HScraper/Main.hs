@@ -1,3 +1,8 @@
+{- |
+Module for various convenience functions and error-free wrappers of parsers so that
+they can be used for batches of urls.
+-}
+
 module HScraper.Main (
   getFromFile,
   getParsedHTML,
@@ -18,7 +23,7 @@ import Data.Monoid
 import qualified Data.Text.IO as TIO
 import qualified Data.Text as T
 
--- | Tries to parse html from file. returns NullTree
+-- | Tries to parse html from file. returns 'NullTree'
 -- if parsing fails.
 getFromFile :: FilePath -> IO HTMLTree
 getFromFile str = getParsedHTML_ <$>  parseHtml <$> (openFile str ReadMode >>= TIO.hGetContents)
@@ -42,9 +47,8 @@ getParsedQuery_ = either (const []) id
 getParsedQuery :: String -> Query
 getParsedQuery = getParsedQuery_ .  parseQuery
 
+-- | takes url and returns parsed 'HTMLTree'.
 parseSite :: String -> IO HTMLTree
 parseSite url  = do
   str <- tidy =<< fetchResponse url
   return $  getParsedHTML str
-
-

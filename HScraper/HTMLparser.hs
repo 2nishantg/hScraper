@@ -1,3 +1,7 @@
+{- |
+Module for parsing html.
+-}
+
 {-# LANGUAGE OverloadedStrings, NoMonomorphismRestriction, FlexibleContexts #-}
 module HScraper.HTMLparser (
   parseHtml
