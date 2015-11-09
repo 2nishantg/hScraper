@@ -17,6 +17,7 @@ tidy :: T.Text -> IO T.Text
 tidy t  = do
   pwd <- System.Directory.getCurrentDirectory
   let tempFile = pwd ++ "/hscraper_temp.html"
+  let tempLogFile = pwd ++ "hscraper_temp.log"
   TIO.writeFile tempFile  t
-  (_,Just hout,_,_) <- createProcess (proc "tidy" ["-q","-f", "/home/nis/hscraper_webpages.logs", tempFile]){ std_out = CreatePipe }
+  (_,Just hout,_,_) <- createProcess (proc "tidy" ["-q","-f", tempLogFile, tempFile]){ std_out = CreatePipe }
   TIO.hGetContents hout
