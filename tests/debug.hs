@@ -4,6 +4,7 @@ import HScraper.Network
 import HScraper.Query
 import HScraper.Tidy
 import HScraper.Types
+import HScraper.Show
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 

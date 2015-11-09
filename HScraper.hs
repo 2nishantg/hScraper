@@ -23,7 +23,8 @@ module HScraper (
   module HScraper.Query ,
   module HScraper.Types ,
   module HScraper.Tidy ,
-  module HScraper.Main
+  module HScraper.Main ,
+  module HScraper.Show
   ) where
 
 
@@ -33,4 +34,5 @@ import HScraper.Query
 import HScraper.Tidy
 import HScraper.Types
 import HScraper.Main
+import HScraper.Show
 

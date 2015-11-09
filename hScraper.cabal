@@ -28,6 +28,7 @@ library
                   , HScraper
                   , HScraper.Types
                   , HScraper.Main
+                  , HScraper.Show
 
    other-modules: HScraper.QueryParser
 

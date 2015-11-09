@@ -23,3 +23,8 @@ printResult :: (String,IO Bool) -> IO ()
 printResult (x, y) = putStr x >> y >>= g
   where g True = putStrLn " Passed"
         g False = putStrLn " Failed"
+
+testHtml = Prelude.unlines["<html>",
+                          "<head> yolo </head>",
+                          "<body> <p> test </p> </body>",
+                          "</html>"]
