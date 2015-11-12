@@ -6,7 +6,7 @@ Parses correct html by itself and has support for malformed html using either on
 - http://www.html-tidy.org/
 - http://tidy.sourceforge.net/
 
-See [Documentation](https://hackage.haskell.org/package/hScraper-0.1.0.0) or generate using `cabal haddock`.
+See [Documentation](https://hackage.haskell.org/package/hScraper-0.1.0.0/docs/HScraper.html) for details.
 
 This project is done as course project for CS653 under [Piyush P Kurur](https://github.com/piyush-kurur).
 
