@@ -14,4 +14,3 @@ Following are the names of team members :
 
 - [Nishant Gupta (13447)](https://github.com/Nishant9)
 - [Ayush Agarwal (13180)](https://github.com/agarwalayush)
-- M Arunothia (13378)
